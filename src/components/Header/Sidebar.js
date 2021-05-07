@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 
 import Link from "next/link";
-import { FaPeopleCarry, FaTag, FaUser } from "react-icons/fa";
+import { FaHome, FaPeopleCarry, FaTag, FaUser } from "react-icons/fa";
 import { BiWorld } from "react-icons/bi";
 import { AiFillNotification } from "react-icons/ai";
 import { RiPagesFill } from "react-icons/ri";
@@ -43,9 +43,11 @@ export default function Sidebar({ open, setOpen }) {
     >
       <div className={classes.drawerContainer}>
         {isAuthenticated && (
-          <Card style={{borderRadius:"0px"}}>
+          <Card style={{ borderRadius: "0px" }}>
             <CardHeader
-              avatar={<Avatar aria-label="profile" src={user.profilePic}></Avatar>}
+              avatar={
+                <Avatar aria-label="profile" src={user.profilePic}></Avatar>
+              }
               title={<Typography variant="h6">{user.name}</Typography>}
               subheader={user.email}
             />
@@ -90,6 +92,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const lists = [
+  {
+    title: "Home",
+    icon: <FaHome />,
+    href: "/",
+  },
   {
     title: "Customer",
     icon: <FaUser />,
@@ -146,6 +153,6 @@ const lists = [
     title: "Pages",
 
     icon: <RiPagesFill />,
-    href: "/pages",
+    href: "/page",
   },
 ];

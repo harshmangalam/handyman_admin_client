@@ -27,6 +27,7 @@ const initialValues = {
   name: "",
   description: "",
   category: "",
+  price: "",
 };
 
 export default function Create() {
@@ -103,10 +104,25 @@ export default function Create() {
               {errors?.description}
             </Typography>
 
+            <TextField
+              type="number"
+              style={{ marginTop: "16px" }}
+              variant="outlined"
+              fullWidth
+              value={values.price}
+              error={Boolean(errors?.price)}
+              name="price"
+              onChange={handleChange}
+              label="Price per hour (in CAD)"
+            />
+            <Typography variant="body1" color="error">
+              {errors?.price}
+            </Typography>
+
             <FormControl
               fullWidth
               variant="outlined"
-              error={Boolean(errors?.description)}
+              error={Boolean(errors?.category)}
               style={{ marginTop: "16px" }}
             >
               <InputLabel id="category">Categories</InputLabel>

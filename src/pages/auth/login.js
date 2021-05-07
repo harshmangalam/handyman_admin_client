@@ -64,7 +64,7 @@ export default function Login() {
         }
         authDispatch("LOGIN", user);
 
-        router.push("/");
+        return router.push("/");
       } catch (error) {
         if (error.response) {
           uiDispatch("SNACKBAR", {

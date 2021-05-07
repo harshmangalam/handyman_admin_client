@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 const initialState = {
@@ -39,14 +40,21 @@ export const AuthProvider = ({ children }) => {
 
   const dispatch = (type, payload) => defaultDispatch({ type, payload });
 
+  const router = useRouter();
+
   useEffect(() => {
     async function fetchCurrentUser() {
       try {
         const res = await axios.get("/auth/me");
 
-        dispatch("LOGIN", res.data.data.user);
+        if (res.data.type === "success") {
+          dispatch("LOGIN", res.data.data.user);
+          return;
+        }
+
+        router.push("/auth/login");
       } catch (error) {
-        console.log(error);
+        router.push("/auth/login");
       }
     }
 

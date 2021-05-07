@@ -26,7 +26,9 @@ export default function ShortCard({ card }) {
         className={classes.inner}
         style={{ backgroundColor: randomColor() }}
       >
-        {card.icon}
+        <Avatar variant="rounded" className={classes.avatar}>
+          {card.icon}
+        </Avatar>
       </Paper>
 
       <Typography variant="h5">{card.title}</Typography>
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
+
     alignItems: "flex-end",
     padding: theme.spacing(3),
     position: "relative",
@@ -48,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: fade(theme.palette.common.white, 0.16),
       transform: "scale(1.03)",
     },
+  },
+  avatar: {
+    backgroundColor: "black",
+    color: "white",
   },
   inner: {
     position: "absolute",

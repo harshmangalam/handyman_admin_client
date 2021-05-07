@@ -67,7 +67,7 @@ export default function App(props) {
                 <main
                   style={{
                     flex: 1,
-                    padding:"16px 0px"
+                    padding: "16px 0px",
                   }}
                 >
                   <Container>
@@ -88,3 +88,4 @@ export default function App(props) {
     </React.Fragment>
   );
 }
+

@@ -8,8 +8,13 @@ import { RiPagesFill } from "react-icons/ri";
 import { SiCodefactor } from "react-icons/si";
 import { SupervisorAccount } from "@material-ui/icons";
 import useSWR from "swr";
+
+import { useRouter } from "next/router";
+
 export default function Home() {
   const { data, error } = useSWR("/admin");
+
+  const router = useRouter();
 
   const shortCards = data && [
     {
@@ -78,7 +83,7 @@ export default function Home() {
       value: 20,
 
       icon: <RiPagesFill />,
-      href: "/pages",
+      href: "/page",
     },
   ];
 
