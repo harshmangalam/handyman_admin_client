@@ -18,11 +18,13 @@ import {
 import useSWR from "swr";
 import { useState } from "react";
 import { Delete, Edit, Add } from "@material-ui/icons";
-
+import { useRouter } from "next/router";
+import DeleteDialog from "../../components/DeleteDialog";
 export default function Service() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(1);
 
+  const router = useRouter();
   const { data, error } = useSWR(`/service?limit=${limit}&page=${page}`);
 
   return (
@@ -51,6 +53,8 @@ export default function Service() {
                   <TableCell>Name</TableCell>
                   <TableCell>Description</TableCell>
                   <TableCell>Category</TableCell>
+                  <TableCell>Currency</TableCell>
+                  <TableCell>Price</TableCell>
                   <TableCell>Creator</TableCell>
                   <TableCell>CreatedAt</TableCell>
                   <TableCell>UpdatedAt</TableCell>
@@ -70,16 +74,22 @@ export default function Service() {
                       <TableCell>{row.name}</TableCell>
                       <TableCell>{row.description}</TableCell>
                       <TableCell>{row.category.name}</TableCell>
+                      <TableCell>{row.currency}</TableCell>
+                      <TableCell>{row.price}</TableCell>
+              
+
                       <TableCell>{row.creator.name}</TableCell>
                       <TableCell>{row.createdAt}</TableCell>
                       <TableCell>{row.updatedAt}</TableCell>
                       <TableCell>
-                        <IconButton>
-                          <Delete />
-                        </IconButton>
+                        <DeleteDialog url={`/service/${row._id}`} />
                       </TableCell>
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() =>
+                            router.push(`/service/${row._id}/edit`)
+                          }
+                        >
                           <Edit />
                         </IconButton>
                       </TableCell>

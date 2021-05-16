@@ -16,6 +16,8 @@ import {
 import useSWR from "swr";
 import { useState } from "react";
 import { Delete, Edit, Add } from "@material-ui/icons";
+import DeleteDialog from "../../components/DeleteDialog";
+import UserModel from "../../components/UserModel";
 
 export default function Customers() {
   const [page, setPage] = useState(0);
@@ -75,14 +77,10 @@ export default function Customers() {
                       <TableCell>{row.createdAt}</TableCell>
                       <TableCell>{row.updatedAt}</TableCell>
                       <TableCell>
-                        <IconButton>
-                          <Delete />
-                        </IconButton>
+                      <DeleteDialog url={`/user/${row._id}`}  />
                       </TableCell>
                       <TableCell>
-                        <IconButton>
-                          <Edit />
-                        </IconButton>
+                        <UserModel user={row} />
                       </TableCell>
                     </TableRow>
                   ))}

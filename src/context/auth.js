@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 const initialState = {
   isAuthenticated: false,
   user: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 const StateContext = createContext(initialState);
@@ -55,6 +55,8 @@ export const AuthProvider = ({ children }) => {
         router.push("/auth/login");
       } catch (error) {
         router.push("/auth/login");
+      } finally {
+        dispatch("LOADING", false);
       }
     }
 
@@ -62,7 +64,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
   return (
     <DispatchContext.Provider value={dispatch}>
-      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+      <StateContext.Provider value={state}>
+        {state.isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              minHeight: "100vh",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <h1>Loading...</h1>
+          </div>
+        ) : (
+          children
+        )}
+      </StateContext.Provider>
     </DispatchContext.Provider>
   );
 };

@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import {
-  Avatar,
   Button,
   Typography,
   IconButton,
@@ -16,9 +15,12 @@ import {
 } from "@material-ui/core";
 import useSWR from "swr";
 
-import { Delete, Edit, Add } from "@material-ui/icons";
+import { Edit, Add } from "@material-ui/icons";
+import { useRouter } from "next/router";
+import DeleteDialog from "../../components/DeleteDialog";
 
 export default function Page() {
+  const router = useRouter();
   const { data, error } = useSWR(`/page`);
   return (
     <div>
@@ -44,7 +46,8 @@ export default function Page() {
                   <TableCell>Page ID</TableCell>
                   <TableCell>Title</TableCell>
                   <TableCell>Description</TableCell>
-
+                  <TableCell>Slug</TableCell>
+                  <TableCell>Creator</TableCell>
                   <TableCell>CreatedAt</TableCell>
                   <TableCell>UpdatedAt</TableCell>
 
@@ -59,15 +62,17 @@ export default function Page() {
                       <TableCell>{row._id}</TableCell>
                       <TableCell>{row.title}</TableCell>
                       <TableCell>{row.description}</TableCell>
+                      <TableCell>{row.slug}</TableCell>
+                      <TableCell>{row.creator.name}</TableCell>
                       <TableCell>{row.createdAt}</TableCell>
                       <TableCell>{row.updatedAt}</TableCell>
                       <TableCell>
-                        <IconButton>
-                          <Delete />
-                        </IconButton>
+                        <DeleteDialog url={`/page/${row._id}`} />
                       </TableCell>
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => router.push(`/page/${row.slug}/edit`)}
+                        >
                           <Edit />
                         </IconButton>
                       </TableCell>

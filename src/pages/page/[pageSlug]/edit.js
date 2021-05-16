@@ -13,24 +13,19 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useUIDispatch } from "../../context/ui";
+import { useUIDispatch } from "../../../context/ui";
+import useSWR from "swr";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Page title is required"),
   description: Yup.string().required("Page Description is required"),
 });
 
-const initialValues = {
-  title: "",
-  description: "",
-  content: "",
-};
-
 const useStyles = makeStyles((theme) => ({
   editorOutput: {},
 }));
 
-function Page(props) {
+function Page({ page }) {
   const classes = useStyles();
   const [ready, setReady] = useState(false);
   const quill = useRef();
@@ -38,25 +33,30 @@ function Page(props) {
 
   const uiDispatch = useUIDispatch();
 
+  const router = useRouter();
+
   useEffect(() => {
     quill.current = require("react-quill");
     setReady(true);
   }, []);
-  const [value, setValue] = useState("");
 
-  const router = useRouter();
+  const [value, setValue] = useState(page?.content);
 
   function handleValue(v) {
     setValue(v);
   }
 
   const { values, errors, handleSubmit, handleChange } = useFormik({
-    initialValues,
+    initialValues: {
+      title: page.title,
+      content: page.content,
+      description: page.description,
+    },
     validationSchema,
     async onSubmit(values) {
       try {
         values = { ...values, content: value };
-        const res = await axios.post("/page", values);
+        const res = await axios.put(`/page/${page._id}`, values);
 
         uiDispatch("SNACKBAR", {
           open: true,
@@ -131,7 +131,7 @@ function Page(props) {
               color="secondary"
               style={{ marginTop: "24px" }}
             >
-              Create Page
+              Edit Page
             </Button>
           </form>
         </Paper>
@@ -181,5 +181,18 @@ const formats = [
   "color",
   "background",
 ];
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const res = await axios.get(`/page/${ctx.query.pageSlug}`);
+    return {
+      props: {
+        page: res.data.data.page,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export default Page;

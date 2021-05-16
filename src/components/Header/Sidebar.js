@@ -15,7 +15,7 @@ import {
 
 import Link from "next/link";
 import { FaHome, FaPeopleCarry, FaTag, FaUser } from "react-icons/fa";
-import { BiWorld } from "react-icons/bi";
+import { BiLogIn, BiWorld } from "react-icons/bi";
 import { AiFillNotification } from "react-icons/ai";
 import { RiPagesFill } from "react-icons/ri";
 
@@ -42,28 +42,54 @@ export default function Sidebar({ open, setOpen }) {
       onClose={() => setOpen(false)}
     >
       <div className={classes.drawerContainer}>
-        {isAuthenticated && (
-          <Card style={{ borderRadius: "0px" }}>
-            <CardHeader
-              avatar={
-                <Avatar aria-label="profile" src={user.profilePic}></Avatar>
-              }
-              title={<Typography variant="h6">{user.name}</Typography>}
-              subheader={user.email}
-            />
-          </Card>
-        )}
+        <Card style={{ borderRadius: "0px" }}>
+          <CardHeader
+            avatar={
+              <Avatar
+                aria-label="profile"
+                src={isAuthenticated ? user.profilePic : null}
+                alt={isAuthenticated ? user.name : "No user"}
+              ></Avatar>
+            }
+            title={
+              <Typography variant="h6">
+                {isAuthenticated ? user.name : "Login"}
+              </Typography>
+            }
+            subheader={isAuthenticated ? user.email : "login to proceed"}
+          />
+        </Card>
+
         <List>
-          {lists.map((list) => (
-            <Link href={list.href} passHref>
-              <ListItem key={list.title} button onClick={() => setOpen(false)}>
-                <ListItemIcon style={{ fontSize: "20px" }}>
-                  {list.icon}
-                </ListItemIcon>
-                <ListItemText primary={list.title} />
-              </ListItem>
-            </Link>
-          ))}
+          {isAuthenticated
+            ? lists.map((list) => (
+                <Link href={list.href} passHref>
+                  <ListItem
+                    key={list.title}
+                    button
+                    onClick={() => setOpen(false)}
+                  >
+                    <ListItemIcon style={{ fontSize: "20px" }}>
+                      {list.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={list.title} />
+                  </ListItem>
+                </Link>
+              ))
+            : auth.map((list) => (
+                <Link href={list.href} passHref>
+                  <ListItem
+                    key={list.title}
+                    button
+                    onClick={() => setOpen(false)}
+                  >
+                    <ListItemIcon style={{ fontSize: "20px" }}>
+                      {list.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={list.title} />
+                  </ListItem>
+                </Link>
+              ))}
         </List>
       </div>
     </Drawer>
@@ -143,16 +169,18 @@ const lists = [
   },
 
   {
-    title: "Appointment",
-
-    icon: <AiFillNotification />,
-    href: "/appointment",
-  },
-
-  {
     title: "Pages",
 
     icon: <RiPagesFill />,
     href: "/page",
+  },
+];
+
+const auth = [
+  {
+    title: "Login",
+
+    icon: <BiLogIn />,
+    href: "/auth/login",
   },
 ];

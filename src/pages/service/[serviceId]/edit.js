@@ -11,42 +11,40 @@ import {
 } from "@material-ui/core";
 import { useFormik } from "formik";
 import { useState } from "react";
-import ImageCard from "../../components/ImageCard";
-import { useUIDispatch } from "../../context/ui";
+import ImageCard from "../../../components/ImageCard";
+import { useUIDispatch } from "../../../context/ui";
 import * as Yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Service Name is required"),
   description: Yup.string().required("Service Description is required"),
   category: Yup.string().required("Category  is required"),
 });
 
-const initialValues = {
-  name: "",
-  description: "",
-  category: "",
-  price: "",
-  currency:"",
-};
-
-export default function Create() {
+export default function Create({ service }) {
   const [image, setImage] = useState();
-
-  const uiDispatch = useUIDispatch();
 
   const { data: categoryName, error: categoryError } = useSWR(
     "/category/fetch_name"
   );
+  const uiDispatch = useUIDispatch();
 
   const router = useRouter();
   const { setErrors, errors, values, handleSubmit, handleChange } = useFormik({
-    initialValues,
+    initialValues: {
+      name: service.name,
+      description: service.description,
+      price: service.price,
+      category: service.category._id,
+      currency: service.currency,
+    },
     validationSchema,
     async onSubmit(values) {
       try {
-        const res = await axios.post("/service", values);
+        const res = await axios.put(`/service/${service._id}`, values);
         const data = res.data;
 
         uiDispatch("SNACKBAR", {
@@ -179,7 +177,7 @@ export default function Create() {
               color="secondary"
               style={{ marginTop: "24px" }}
             >
-              Create Service
+              Edit Category
             </Button>
           </form>
         </Paper>
@@ -187,3 +185,16 @@ export default function Create() {
     </Grid>
   );
 }
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const res = await axios.get(`/service/${ctx.query.serviceId}`);
+    return {
+      props: {
+        service: res.data.data.service,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};

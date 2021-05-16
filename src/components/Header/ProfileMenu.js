@@ -1,10 +1,13 @@
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
+import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
 
 export default function ProfileMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const isOpen = Boolean(anchorEl);
+
+  const router = useRouter();
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,8 +38,15 @@ export default function ProfileMenu() {
         open={isOpen}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+        <MenuItem
+          onClick={() => {
+            router.push("/account/profile");
+            setAnchorEl(null);
+          }}
+        >
+          Profile
+        </MenuItem>
+        <MenuItem onClick={() => {}}>Settings</MenuItem>
       </Menu>
     </Fragment>
   );

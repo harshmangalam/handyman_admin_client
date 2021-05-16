@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "../theme";
 import Navbar from "../components/Header/Navbar";
@@ -7,13 +7,12 @@ import Footer from "../components/Footer/Footer";
 import "../styles/global.css";
 
 import Axios from "axios";
-import { useRouter } from "next/router";
+
 import { SWRConfig } from "swr";
 
 import { AuthProvider } from "../context/auth";
 import { UIProvider } from "../context/ui";
 import SnackbarAlert from "../components/SnackbarAlert";
-import { Container } from "@material-ui/core";
 
 Axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
 Axios.defaults.withCredentials = true;
@@ -29,7 +28,8 @@ const fetcher = async (url) => {
 
 export default function App(props) {
   const { Component, pageProps } = props;
-  const { pathname } = useRouter();
+
+  const classes = useStyle();
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -67,12 +67,10 @@ export default function App(props) {
                 <main
                   style={{
                     flex: 1,
-                    padding: "16px 0px",
                   }}
+                  className={classes.main}
                 >
-                  <Container>
-                    <Component {...pageProps} />
-                  </Container>
+                  <Component {...pageProps} />
                 </main>
 
                 <footer>
@@ -89,3 +87,11 @@ export default function App(props) {
   );
 }
 
+const useStyle = makeStyles((theme) => ({
+  main: {
+    padding: "16px 8px",
+    [theme.breakpoints.up("md")]: {
+      padding: "24px",
+    },
+  },
+}));

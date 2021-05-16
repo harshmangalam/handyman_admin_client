@@ -14,8 +14,8 @@ import {
   TableRow,
 } from "@material-ui/core";
 import useSWR from "swr";
-import { Delete, Add } from "@material-ui/icons";
-
+import { Add } from "@material-ui/icons";
+import DeleteDialog from "../../components/DeleteDialog";
 export default function Region() {
   const { data, error } = useSWR(`/region`);
   return (
@@ -58,9 +58,7 @@ export default function Region() {
                       <TableCell>{row.createdAt}</TableCell>
 
                       <TableCell>
-                        <IconButton>
-                          <Delete />
-                        </IconButton>
+                        <DeleteDialog url={`/region/${row._id}`} />
                       </TableCell>
                     </TableRow>
                   ))}

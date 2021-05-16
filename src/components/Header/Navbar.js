@@ -1,6 +1,7 @@
 import {
   AppBar,
   Badge,
+  CircularProgress,
   IconButton,
   makeStyles,
   Toolbar,
@@ -11,7 +12,10 @@ import {
 
 import Link from "next/link";
 
-import { Menu as MenuIcon, Notifications as NotificationsIcon } from "@material-ui/icons";
+import {
+  Menu as MenuIcon,
+  Notifications as NotificationsIcon,
+} from "@material-ui/icons";
 import { Fragment, useState } from "react";
 
 import { useAuthState } from "../../context/auth";
@@ -21,7 +25,7 @@ import ProfileMenu from "./ProfileMenu";
 export default function Navbar() {
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const { isAuthenticated } = useAuthState();
+  const { isAuthenticated, isLoading } = useAuthState();
   const classes = useStyles();
   return (
     <Fragment>
@@ -46,13 +50,23 @@ export default function Navbar() {
             </Typography>
           </Link>
 
-
-          <IconButton aria-label="show 17 new notifications" color="inherit">
-            <Badge badgeContent={17} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <ProfileMenu />
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            isAuthenticated && (
+              <Fragment>
+                <IconButton
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <ProfileMenu />
+              </Fragment>
+            )
+          )}
         </Toolbar>
       </AppBar>
 

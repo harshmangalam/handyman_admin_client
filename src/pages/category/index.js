@@ -12,16 +12,19 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
 } from "@material-ui/core";
 import useSWR from "swr";
 import { useState } from "react";
-import { Delete, Edit, Add } from "@material-ui/icons";
+import { Edit, Add } from "@material-ui/icons";
+import { useRouter } from "next/router";
+import DeleteDialog from "../../components/DeleteDialog";
 
 export default function Category() {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(1);
+
+  const router = useRouter();
 
   const { data, error } = useSWR(`/category`);
   return (
@@ -69,12 +72,14 @@ export default function Category() {
                       <TableCell>{row.createdAt}</TableCell>
                       <TableCell>{row.updatedAt}</TableCell>
                       <TableCell>
-                        <IconButton>
-                          <Delete />
-                        </IconButton>
+                        <DeleteDialog url={`/category/${row._id}`} />
                       </TableCell>
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() =>
+                            router.push(`/category/${row._id}/edit`)
+                          }
+                        >
                           <Edit />
                         </IconButton>
                       </TableCell>

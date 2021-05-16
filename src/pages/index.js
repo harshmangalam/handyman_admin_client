@@ -1,20 +1,28 @@
-import { CircularProgress, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import ShortCard from "../components/Home/ShortCard";
 import { FaPeopleCarry, FaTag, FaUser } from "react-icons/fa";
 import { BiWorld } from "react-icons/bi";
-import { AiFillNotification } from "react-icons/ai";
 import { RiPagesFill } from "react-icons/ri";
-
+import { useAuthState } from "../context/auth";
 import { SiCodefactor } from "react-icons/si";
 import { SupervisorAccount } from "@material-ui/icons";
 import useSWR from "swr";
-
+import { Skeleton } from "@material-ui/lab";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function Home() {
   const { data, error } = useSWR("/admin");
 
+  const { isAuthenticated, isLoading } = useAuthState();
+
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/auth/login");
+    }
+  }, []);
 
   const shortCards = data && [
     {
@@ -71,16 +79,8 @@ export default function Home() {
     },
 
     {
-      title: "Appointment",
-      value: 20,
-
-      icon: <AiFillNotification />,
-      href: "/appointment",
-    },
-
-    {
       title: "Pages",
-      value: 20,
+      value: data.data.count.page,
 
       icon: <RiPagesFill />,
       href: "/page",
@@ -90,17 +90,17 @@ export default function Home() {
   return (
     <section style={{ marginTop: "100px" }}>
       <Grid container spacing={4}>
-        {data ? (
-          shortCards.map((card) => (
-            <Grid item xs={12} md={4} key={card.title}>
-              <ShortCard card={card} />
-            </Grid>
-          ))
-        ) : (
-          <div style={{ textAlign: "center" }}>
-            <CircularProgress />
-          </div>
-        )}
+        {isLoading || !data
+          ? [...new Array(4)].map((i) => (
+              <Grid key={i} item xs={12} md={4}>
+                <Skeleton variant="rect" height="120px" width="100%" />
+              </Grid>
+            ))
+          : shortCards.map((card) => (
+              <Grid item xs={12} md={4} key={card.title}>
+                <ShortCard card={card} />
+              </Grid>
+            ))}
       </Grid>
     </section>
   );

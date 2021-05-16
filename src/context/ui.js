@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 const initialState = {
   isLoading: false,
   snackbar: {},
+  uiTheme: "light",
 };
 
 const StateContext = createContext(initialState);
@@ -16,6 +17,12 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         isLoading: payload,
+      };
+
+    case "THEME":
+      return {
+        ...state,
+        uiTheme: payload,
       };
 
     case "SNACKBAR":
