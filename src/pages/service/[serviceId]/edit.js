@@ -25,7 +25,10 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Create({ service }) {
-  const [image, setImage] = useState();
+  const [imageData, setImageData] = useState({
+    image: service.image,
+    imagePublicId: service.imagePublicId,
+  });
 
   const { data: categoryName, error: categoryError } = useSWR(
     "/category/fetch_name"
@@ -44,7 +47,10 @@ export default function Create({ service }) {
     validationSchema,
     async onSubmit(values) {
       try {
-        const res = await axios.put(`/service/${service._id}`, values);
+        const res = await axios.put(`/service/${service._id}`, {
+          ...values,
+          ...imageData,
+        });
         const data = res.data;
 
         uiDispatch("SNACKBAR", {
@@ -166,7 +172,7 @@ export default function Create({ service }) {
             </FormControl>
 
             <div style={{ marginTop: "16px" }}>
-              <ImageCard image={image} setImage={setImage} />
+              <ImageCard imageData={imageData} setImageData={setImageData} />
             </div>
 
             <Button

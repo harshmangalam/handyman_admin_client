@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function Edit({ category }) {
-  const [image, setImage] = useState();
+  const [imageData, setImageData] = useState();
 
   const uiDispatch = useUIDispatch();
 
@@ -25,7 +25,7 @@ export default function Edit({ category }) {
     validationSchema,
     async onSubmit(values) {
       try {
-        const res = await axios.put(`/category/${category._id}`, values);
+        const res = await axios.put(`/category/${category._id}`, { ...values, ...imageData });
         const data = res.data;
 
         uiDispatch("SNACKBAR", {
@@ -85,7 +85,7 @@ export default function Edit({ category }) {
             </Typography>
 
             <div style={{ marginTop: "16px" }}>
-              <ImageCard image={image} setImage={setImage} />
+            <ImageCard setImageData={setImageData} />
             </div>
 
             <Button

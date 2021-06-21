@@ -1,21 +1,24 @@
-import { Avatar, Button, Chip } from "@material-ui/core";
-import {
-  Delete as DeleteIcon,
-  CloudUploadOutlined as UploadIcon,
-} from "@material-ui/icons";
-export default function ImageCard({ image, setImage }) {
+import { Avatar, Button, Chip, CircularProgress } from "@material-ui/core";
+import { CloudUploadOutlined as UploadIcon } from "@material-ui/icons";
+
+import useCloudinary from "../hooks/useCloudinary";
+
+export default function ImageCard({ imageData, setImageData }) {
+  const { loading, uploadImage, removeImage, data } =
+    useCloudinary(setImageData);
+
   return (
     <div style={{ marginTop: "20px" }}>
-      {image ? (
+      {data || imageData ? (
         <>
           <Avatar
             variant="square"
             style={{ width: "100%", height: "200px" }}
-            src={URL.createObjectURL(image)}
+            src={data?.secure_url || imageData?.image}
           />
           <Chip
-            label={`${image.name} (${Math.ceil(image.size / 1000)}) KB`}
-            onDelete={() => setImage(null)}
+            label="Remove"
+            onDelete={removeImage}
             color="secondary"
             style={{ position: "relative", top: "-20px", left: "40%" }}
           />
@@ -27,14 +30,15 @@ export default function ImageCard({ image, setImage }) {
             id="contained-button-file"
             type="file"
             hidden
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={uploadImage}
           />
           <label htmlFor="contained-button-file">
             <Button
-              startIcon={<UploadIcon />}
+              startIcon={loading ? <CircularProgress /> : <UploadIcon />}
               variant="contained"
               color="primary"
               component="span"
+              disabled={loading}
             >
               Upload Image
             </Button>

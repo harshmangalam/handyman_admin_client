@@ -6,22 +6,23 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   IconButton,
   Radio,
   RadioGroup,
   Switch,
   Typography,
 } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete, Edit } from "@material-ui/icons";
 import React, { useState } from "react";
 import axios from "axios";
 import { useUIDispatch } from "../context/ui";
 
 function UserModel({ user }) {
-    console.log(user)
+  console.log(user);
   const [open, setOpen] = React.useState(false);
   const [block, setBlock] = useState(false);
-  const [role, setRole] = useState(user.role);
+  const [role, setRole] = useState(user?.role || "");
 
   const uiDispatch = useUIDispatch();
 
@@ -54,52 +55,61 @@ function UserModel({ user }) {
   return (
     <div>
       <IconButton onClick={handleClickOpen}>
-        <Delete />
+        <Edit />
       </IconButton>
       <Dialog
         open={open}
+        fullWidth
+        maxWidth="sm"
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogContent>
-          <Typography>Block User</Typography>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={block}
-                onChange={(e) => setBlock(e.target.checked)}
-                name="block"
-              />
-            }
-            label="Block"
-          />
-
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Role</FormLabel>
-            <RadioGroup
-              aria-label="role"
-              name="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
+          <Grid container alignItems="center" justify="space-between">
+            <Grid item>
+              <Typography>
+                Block User
+              </Typography>
               <FormControlLabel
-                value="CUSTOMER"
-                control={<Radio />}
-                label="Customer"
-              />
-              <FormControlLabel
-                value="TASKER"
-                control={<Radio />}
-                label="Tasker"
-              />
-              <FormControlLabel
-                value="ADMIN"
-                control={<Radio />}
-                label="Admin"
-              />
-            </RadioGroup>
-          </FormControl>
+                control={
+                  <Switch
+                    checked={block}
+                    onChange={(e) => setBlock(e.target.checked)}
+                    name="block"
+                  />
+                }
+                label="Block"
+              ></FormControlLabel>
+            </Grid>
+            <Grid item>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Change Role</FormLabel>
+                <RadioGroup
+                  aria-label="role"
+                  name="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="CUSTOMER"
+                    control={<Radio />}
+                    label="Customer"
+                  />
+                  <FormControlLabel
+                    value="TASKER"
+                    control={<Radio />}
+                    label="Tasker"
+                  />
+                  <FormControlLabel
+                    value="ADMIN"
+                    control={<Radio />}
+                    label="Admin"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

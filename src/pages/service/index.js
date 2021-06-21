@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import DeleteDialog from "../../components/DeleteDialog";
 export default function Service() {
   const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(1);
+  const [limit, setLimit] = useState(2);
 
   const router = useRouter();
   const { data, error } = useSWR(`/service?limit=${limit}&page=${page}`);
@@ -43,7 +43,7 @@ export default function Service() {
 
       <section>
         <Paper style={{ width: "100%" }}>
-          <TableContainer style={{ maxHeight: "600px" }}>
+          <TableContainer>
             {!data && <LinearProgress style={{ width: "100%" }} />}
             <Table stickyHeader aria-label="simple table">
               <TableHead>

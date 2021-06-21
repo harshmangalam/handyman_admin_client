@@ -10,13 +10,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useFormik } from "formik";
-import { useState } from "react";
 import ImageCard from "../../components/ImageCard";
 import { useUIDispatch } from "../../context/ui";
 import * as Yup from "yup";
 import axios from "axios";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import { useState } from "react";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Service Name is required"),
   description: Yup.string().required("Service Description is required"),
@@ -28,11 +28,11 @@ const initialValues = {
   description: "",
   category: "",
   price: "",
-  currency:"",
+  currency: "",
 };
 
 export default function Create() {
-  const [image, setImage] = useState();
+  const [imageData, setImageData] = useState(); 
 
   const uiDispatch = useUIDispatch();
 
@@ -46,7 +46,7 @@ export default function Create() {
     validationSchema,
     async onSubmit(values) {
       try {
-        const res = await axios.post("/service", values);
+        const res = await axios.post("/service", { ...values, ...imageData });
         const data = res.data;
 
         uiDispatch("SNACKBAR", {
@@ -168,7 +168,7 @@ export default function Create() {
             </FormControl>
 
             <div style={{ marginTop: "16px" }}>
-              <ImageCard image={image} setImage={setImage} />
+              <ImageCard setImageData={setImageData} />
             </div>
 
             <Button

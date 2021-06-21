@@ -24,7 +24,7 @@ const initialValues = {
 };
 
 export default function Create() {
-  const [image, setImage] = useState();
+  const [imageData, setImageData] = useState();
 
   const uiDispatch = useUIDispatch();
 
@@ -34,7 +34,7 @@ export default function Create() {
     validationSchema,
     async onSubmit(values) {
       try {
-        const res = await axios.post("/category", values);
+        const res = await axios.post("/category",  { ...values, ...imageData });
         const data = res.data;
 
         uiDispatch("SNACKBAR", {
@@ -94,7 +94,7 @@ export default function Create() {
             </Typography>
 
             <div style={{ marginTop: "16px" }}>
-              <ImageCard image={image} setImage={setImage} />
+            <ImageCard setImageData={setImageData} />
             </div>
 
             <Button
